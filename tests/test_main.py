@@ -46,3 +46,45 @@ def test_add_sheep():
 
     assert get_response.status_code == 200
     assert get_response.json()["name"] == new_sheep["name"]
+
+def test_read_all_sheep():
+
+    response = client.get("/sheep/")
+
+    assert response.status_code == 200
+
+    assert isinstance(response.json(), list)
+    assert len(response.json()) >= 6
+
+def test_update_sheep():
+
+    updated_sheep = {
+        "id": 1,
+        "name": "Spice Updated",
+        "breed": "Gotland Updated",
+        "sex": "ram"
+    }
+
+    response = client.put("/sheep/1", json=updated_sheep)
+
+    assert response.status_code == 200
+
+    assert response.json() == updated_sheep
+
+    get_response = client.get("/sheep/1")
+
+    assert get_response.status_code == 200
+    assert get_response.json() == updated_sheep
+
+def test_delete_sheep():
+
+    response = client.delete("/sheep/2")
+
+    assert response.status_code == 200
+
+    assert response.json() == {
+        "id": 2,
+        "name": "Blondie",
+        "breed": "Polypay",
+        "sex": "ram"
+    }

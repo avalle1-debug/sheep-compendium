@@ -15,3 +15,24 @@ def add_sheep(sheep: Sheep):
 
     db.data[sheep.id] = sheep
     return sheep
+
+@app.get("/sheep/", response_model=list[Sheep])
+def read_all_sheep():
+    return list(db.data.values())
+
+@app.put("/sheep/{id}", response_model=Sheep)
+def update_sheep(id: int, sheep: Sheep):
+    if id not in db.data:
+        raise HTTPException(status_code=404, detail="Sheep not found")
+
+    db.data[id] = sheep
+    return sheep
+
+@app.delete("/sheep/{id}", response_model=Sheep)
+def delete_sheep(id: int):
+    if id not in db.data:
+        raise HTTPException(status_code=404, detail="Sheep not found")
+
+    deleted_sheep = db.data[id]
+    del db.data[id]
+    return deleted_sheep
