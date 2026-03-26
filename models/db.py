@@ -9,6 +9,12 @@ class FakeDB:
     def get_sheep(self, id: int) -> Sheep:
         return self.data.get(id)
 
+    def add_sheep(self, sheep: Sheep):
+        if sheep in self.data:
+            raise Exception("Sheep with this ID already exists")
+        self.data[sheep.id] = sheep
+        return sheep
+
 
 db = FakeDB()
 
